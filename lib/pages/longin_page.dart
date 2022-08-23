@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_start/Utils/routes.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String name = "";
+  bool changeButton = false;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -13,14 +20,15 @@ class LoginPage extends StatelessWidget {
           children: [
             Image.asset(
               "assets/images/login_image.png",
-              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 300,
             ),
             const SizedBox(
               height: 20.0,
             ),
-            const Text(
-              'Welcome',
-              style: TextStyle(
+            Text(
+              'Welcome $name',
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -28,33 +36,73 @@ class LoginPage extends StatelessWidget {
             const SizedBox(
               height: 20.0,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "Enter Username",
-                labelText: "Username",
-              ),
-            ),
-            TextFormField(
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: "Enter Password",
-                labelText: "password",
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: "Enter Username",
+                      labelText: "Username",
+                    ),
+                    onChanged: (value) {
+                      name = value;
+                      setState(() {});
+                    },
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      hintText: "Enter Password",
+                      labelText: "password",
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
               height: 20.0,
             ),
-            ElevatedButton(
-              onPressed: () {
-                // ignore: avoid_print
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // ignore: avoid_print
+            //     Navigator.pushNamed(context, MyRoutes.HomeRoute);
+            //   },
+            //   style: TextButton.styleFrom(minimumSize: const Size(150, 60)),
+            //   child: const Text('Login'),
+            // ),
+            InkWell(
+              onTap: () async {
+                setState(() {
+                  changeButton = true;
+                });
+
+                await (Future.delayed(const Duration(seconds: 1)));
                 Navigator.pushNamed(context, MyRoutes.HomeRoute);
               },
-              style: TextButton.styleFrom(minimumSize: const Size(150, 60)),
-              child: const Text('Login'),
-            ),
+              child: AnimatedContainer(
+                duration: const Duration(seconds: 1),
+                width: changeButton ? 50 : 150,
+                height: 50,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: changeButton ? Colors.pink : Colors.deepPurple,
+                    borderRadius: BorderRadius.circular(changeButton ? 50 : 8)),
+                child: changeButton
+                    ? const Icon(
+                        Icons.done,
+                        color: Colors.white,
+                      )
+                    : const Text(
+                        "Login",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+              ),
+            )
           ],
         ),
       ),

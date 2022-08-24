@@ -9,6 +9,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
  
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
       
       darkTheme: ThemeData(brightness: Brightness.dark,
       ),
-    // initialRoute: "/home",
+     initialRoute: MyRoutes.HomeRoute,
       routes: {
         "/":(context) => LoginPage(),
        MyRoutes.HomeRoute: (context) => HomePage(),

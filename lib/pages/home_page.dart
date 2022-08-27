@@ -1,23 +1,64 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import '../Utils/drawer.dart';
+import 'package:flutter_start/Models/catalog.dart';
+import 'package:flutter_start/Widget/item_Widget.dart';
 
-class HomePage extends StatelessWidget {
+import '../Widget/drawer.dart';
+
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final int days = 30;
+  final String name = "shubham";
+
+  @override
+  void initState() {
+    super.initState();
+    loadDate();
+  }
+
+  loadDate() async {
+    await Future.delayed(
+      Duration(seconds: 2),
+    );
+    final catalogJson =
+        await rootBundle.loadString("assets/files/catalog.json");
+    final decodeData = jsonDecode(catalogJson);
+    var productData = decodeData["products"];
+
+    CatalogModel.items =
+        List.from(productData).map<Item>((item) => Item.fromMap(item)).toList();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-     int days = 30;
-    String name = 'shubham';
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Catalog App"),
+        title: const Text("Catalog App"),
       ),
-        body: Center(
-      child: Container(
-        child: Text("Welcome to $days days of flutter by $name kumar "),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: (CatalogModel.items != null && CatalogModel.items.isNotEmpty)
+            ? ListView.builder(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+                itemCount: CatalogModel.items.length,
+                itemBuilder: (context, index) {
+                  return ItemWidget(item: CatalogModel.items[index]);
+                },
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
-    ),
-    drawer: MyDrawer(),
+      drawer: const MyDrawer(),
     );
   }
 }
